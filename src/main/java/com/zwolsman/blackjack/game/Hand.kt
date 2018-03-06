@@ -2,8 +2,9 @@ package com.zwolsman.blackjack.game
 
 import com.zwolsman.blackjack.deck.card.Card
 import com.zwolsman.blackjack.deck.card.Rank
+import sun.plugin.dom.exception.InvalidStateException
 
-class Hand(val cards:ArrayList<Card>) {
+class Hand(cards:Iterable<Card>) {
     constructor(card:Card) : this(arrayListOf(card))
     constructor(cardA:Card, cardB:Card) : this(arrayListOf(cardA, cardB))
 
@@ -33,12 +34,24 @@ class Hand(val cards:ArrayList<Card>) {
         }
 
     var status = Status.OK
+    val cards:ArrayList<Card>
+
+    init {
+        this.cards = cards.toCollection(ArrayList())
+    }
 
     internal lateinit var playOption:(Hand, Option) -> Unit
 
-    fun playOption(option: Option) = playOption(this, option)
+    fun playOption(option: Option) {
+        if(!options.contains(option))
+            throw InvalidStateException("Option $option not in available options $options")
+
+        playOption(this, option)
+        if(points.first() > 21)
+            status = Status.BUSTED
+    }
 
     override fun toString(): String {
-        return ("Hand(POINTS=$points, CARDS=[${cards.map { it.icon }.joinToString(separator = ", ")}], OPTIONS=[${options.map { it.toString() }.joinToString(",")}], STATUS=$status)")
+        return ("Hand(POINTS=$points, CARDS=[${cards.joinToString(separator = ", ") {it.icon}}], OPTIONS=$options, STATUS=$status)")
     }
 }

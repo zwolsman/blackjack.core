@@ -16,9 +16,6 @@ class Game(seed:Long = 0) {
     fun cardIndex() = dealer.cards.size + player.map { it.cards.size }.sum()
 
     private fun playOption(hand: Hand, option: Option) {
-        if(!hand.options.contains(option))
-            throw InvalidStateException("Option $option not in available options (${hand.options.map { it.toString() }.joinToString (separator =  ", " )})")
-
         when(option) {
             Option.HIT -> {
                 hand.cards.add(deck[cardIndex()])

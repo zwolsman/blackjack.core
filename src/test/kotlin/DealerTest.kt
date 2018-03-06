@@ -29,9 +29,9 @@ class DealerTest {
         //Stand on hand so the dealer plays
         game.player[0].playOption(Option.STAND)
 
-        val expectedCards = arrayListOf(Card(Suit.CLUBS, Rank.KING), Card(Suit.HEARTS, Rank.QUEEN))
+        val expectedCards = "♣ K, ♥ Q".toCards()
         val expectedPoints = 20
-        assertEquals(expectedCards, game.dealer.cards)
+        assertIterableEquals(expectedCards, game.dealer.cards)
         assertEquals(listOf(expectedPoints), game.dealer.points)
     }
 

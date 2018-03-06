@@ -4,11 +4,7 @@ import com.zwolsman.blackjack.deck.card.Rank
 
 enum class Option {
     STAND,
-    HIT {
-        override fun isAvailable(hand: Hand): Boolean {
-            return hand.points[0] < 21
-        }
-    },
+    HIT,
     SPLIT {
         override fun isAvailable(hand: Hand): Boolean {
             if(hand.cards.size != 2)
@@ -34,5 +30,5 @@ enum class Option {
         }
     };
 
-    open fun isAvailable(hand: Hand) = true
+    open fun isAvailable(hand: Hand) = hand.points.any { it < 21 }
 }

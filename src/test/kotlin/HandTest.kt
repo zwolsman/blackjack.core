@@ -1,18 +1,15 @@
-import com.zwolsman.blackjack.deck.Deck
-import com.zwolsman.blackjack.deck.card.Card
-import com.zwolsman.blackjack.deck.card.Rank
-import com.zwolsman.blackjack.deck.card.Suit
 import com.zwolsman.blackjack.game.Hand
 import com.zwolsman.blackjack.game.Option
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import sun.plugin.dom.exception.InvalidStateException
 
 class HandTest {
 
-    val ace = Card(Suit.CLUBS, Rank.ACE)
-    val five = Card(Suit.CLUBS, Rank.FIVE)
-    val six = Card(Suit.CLUBS, Rank.SIX)
-    val king = Card(Suit.DIAMONDS, Rank.KING)
+    private val ace = "- A".toCard()
+    private val five = "- 5".toCard()
+    private val six = "- 6".toCard()
+    private val king = "- K".toCard()
 
     @Test
     fun `ace + five`() {
@@ -59,4 +56,20 @@ class HandTest {
         assertFalse(hand.options.contains(Option.DOUBLE))
     }
 
+    @Test
+    fun `Can't hit when above 21`() {
+        val cards = "♣ 4, ♦ A, ♣ 6, ♦ 3".toCards()
+        val hand = Hand(cards)
+        assertTrue(Option.HIT.isAvailable(hand))
+        hand.playOption = {h, option ->
+            if(option == Option.HIT)
+                h.cards.add(king)
+        }
+        hand.playOption(Option.HIT)
+
+        assertFalse(Option.HIT.isAvailable(hand))
+        assertThrows(InvalidStateException::class.java) {
+            hand.playOption(Option.HIT)
+        }
+    }
 }
