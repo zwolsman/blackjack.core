@@ -34,11 +34,7 @@ class Hand(cards:Iterable<Card>) {
         }
 
     var status = Status.OK
-    val cards:ArrayList<Card>
-
-    init {
-        this.cards = cards.toCollection(ArrayList())
-    }
+    val cards:ArrayList<Card> = cards.toCollection(ArrayList())
 
     internal lateinit var playOption:(Hand, Option) -> Unit
 
@@ -52,6 +48,6 @@ class Hand(cards:Iterable<Card>) {
     }
 
     override fun toString(): String {
-        return ("Hand(POINTS=$points, CARDS=[${cards.joinToString(separator = ", ") {it.icon}}], OPTIONS=$options, STATUS=$status)")
+        return ("Hand(POINTS=$points, CARDS=[${cards.joinToString {it.icon}}], OPTIONS=$options, STATUS=$status)")
     }
 }

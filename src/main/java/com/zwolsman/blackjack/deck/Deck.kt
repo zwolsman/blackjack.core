@@ -35,6 +35,6 @@ class Deck(decks: Int, seed: Long = 0) : Iterable<Card> {
     operator fun get(index: Int): Card = cards[index]
 
     override fun toString(): String {
-        return "DECK(CARDS=[${cards.map { it.toString() }.joinToString(separator = ", ")}])"
+        return "DECK(${cards.joinToString { it.icon }})"
     }
 }
