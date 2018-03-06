@@ -7,6 +7,17 @@ import com.zwolsman.blackjack.game.Option
 import com.zwolsman.blackjack.game.Status
 
 class Game(seed:Long = 0) {
+    constructor(seed:Long, vararg handCount:Int) : this(seed) {
+
+        if(handCount.size > 1)
+            TODO("Reconstruct game with multiple hands")
+
+
+        for ((index, h) in handCount.withIndex())
+            for(i in 0 until h - 2) {
+                player[index].playOption(Option.HIT)
+            }
+    }
 
     val deck = Deck(1, seed)
     val dealer = Hand(deck.cards[1], Card.BLANK)

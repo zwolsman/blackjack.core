@@ -61,4 +61,16 @@ class GameTest {
         assertEquals(Status.FINISHED, game.dealer.status)
         assertTrue(game.isFinished)
     }
+
+    @Test
+    fun `can recreate game with seed and hand count`() {
+        val seed = 7903218775403745707
+        val expectedHands = listOf(Hand("♦ 10, ♦ J".toCards()))
+        val expectedDealer = Hand("♦ 7, - -".toCards())
+
+        val game = Game(seed, 2)
+
+        assertIterableEquals(expectedHands, game.player)
+        assertEquals(expectedDealer, game.dealer)
+    }
 }
