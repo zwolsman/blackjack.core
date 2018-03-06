@@ -72,4 +72,21 @@ class HandTest {
             hand.playOption(Option.HIT)
         }
     }
+
+    @Test
+    fun `is valid black jack`() {
+        val blackjacks = listOf(
+                "A" to "K",
+                "A" to "Q",
+                "A" to "J",
+                "A" to "10"
+        )
+
+        for (blackJack in blackjacks.map { "- ${it.first}, - ${it.second}".toCards() }) {
+            val hand = Hand()
+            assertFalse(hand.isBlackjack)
+            blackJack.forEach(hand::addCard)
+            assertTrue(hand.isBlackjack)
+        }
+    }
 }

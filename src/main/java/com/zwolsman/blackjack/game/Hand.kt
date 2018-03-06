@@ -3,11 +3,10 @@ package com.zwolsman.blackjack.game
 import com.zwolsman.blackjack.deck.card.Card
 import com.zwolsman.blackjack.deck.card.Rank
 import sun.plugin.dom.exception.InvalidStateException
-import java.util.Collections.unmodifiableList
 
 class Hand(cards:Iterable<Card>) {
-    constructor(card:Card) : this(arrayListOf(card))
-    constructor(cardA:Card, cardB:Card) : this(arrayListOf(cardA, cardB))
+    constructor() : this(arrayListOf())
+    constructor(vararg cards:Card) : this(cards.asIterable())
 
     val points:List<Int>
         get() {
@@ -33,6 +32,9 @@ class Hand(cards:Iterable<Card>) {
         get() = Option.values().filter {
             it.isAvailable(this)
         }
+
+    val isBlackjack:Boolean
+        get() = cards.size == 2 && points.last() == 21
 
     var status = Status.OK
     val cards:ArrayList<Card> = cards.toCollection(ArrayList())
