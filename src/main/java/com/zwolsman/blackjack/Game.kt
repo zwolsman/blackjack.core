@@ -5,26 +5,27 @@ import com.zwolsman.blackjack.deck.card.Card
 import com.zwolsman.blackjack.game.Hand
 import com.zwolsman.blackjack.game.Option
 import com.zwolsman.blackjack.game.Status
-import sun.plugin.dom.exception.InvalidStateException
 
 class Game(seed:Long = 0) {
 
     val deck = Deck(1, seed)
     val dealer = Hand(deck.cards[1], Card.BLANK)
     val player = listOf(Hand(deck.cards[0], deck.cards[2]))
-    private val stopsAtSoft17 = true
-    fun cardIndex() = dealer.cards.size + player.map { it.cards.size }.sum()
+
+    private val cardIndex:Int
+            get() = dealer.cards.size + player.map { it.cards.size }.sum()
+
+    val nextCard:Card
+        get() = deck[cardIndex]
 
     private fun playOption(hand: Hand, option: Option) {
         when(option) {
             Option.HIT -> {
-                hand.cards.add(deck[cardIndex()])
-                if(hand.points[0] > 21)
-                    hand.status = Status.BUSTED
+                hand.cards.add(nextCard)
             }
             Option.STAND -> {
                 hand.status = Status.FINISHED
-                if(player.all { it.status == Status.FINISHED || it.status == Status.BUSTED })
+                if(player.none { it.status.canPlay })
                     playDealer()
             }
             Option.SPLIT -> TODO()
@@ -34,7 +35,7 @@ class Game(seed:Long = 0) {
     }
 
 
-    private fun playDealer() {
+    private fun playDealer(stopsAtSoft17:Boolean = true) {
         while (true) {
             val points = if (stopsAtSoft17) {
                 dealer.points.last()
@@ -47,14 +48,9 @@ class Game(seed:Long = 0) {
                 continue
             }
 
-            if ((17..21).contains(points)) {
-                dealer.status = Status.FINISHED
-                break
-            } else if(points > 21)
-            {
-                dealer.status = Status.BUSTED
-                break
-            } else if (points >= 17) {
+            if (points >= 17) {
+                if(points <= 21)
+                    dealer.status = Status.FINISHED
                 break
             }
 
@@ -69,8 +65,7 @@ class Game(seed:Long = 0) {
 
     val isFinished: Boolean
         get() =
-            (dealer.status == Status.FINISHED || dealer.status == Status.BUSTED) &&
-                    player.all { it.status == Status.FINISHED || it.status == Status.BUSTED }
+            !dealer.status.canPlay && player.none { it.status.canPlay }
 
     private val Hand.hasBlank: Boolean
         get() = this.cards.any { it == Card.BLANK }

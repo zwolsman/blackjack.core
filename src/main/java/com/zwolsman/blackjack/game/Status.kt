@@ -3,5 +3,8 @@ package com.zwolsman.blackjack.game
 enum class Status {
     OK,
     BUSTED,
-    FINISHED
+    FINISHED;
+
+    val canPlay:Boolean
+        get() = this == OK
 }

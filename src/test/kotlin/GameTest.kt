@@ -13,9 +13,7 @@ class GameTest {
     @Test
     fun `initial game card index`() {
         val game = Game()
-        val nextCard = game.deck[game.cardIndex()]
-
-        assertEquals(4, game.cardIndex())
+        val nextCard = game.nextCard
         assertEquals(Card(Suit.CLUBS, Rank.FOUR), nextCard)
     }
 
@@ -31,7 +29,7 @@ class GameTest {
     @Test
     fun `player hit success`() {
         val game = Game()
-        val nextCard = game.deck[game.cardIndex()]
+        val nextCard = game.nextCard
 
         assertEquals(2, game.player[0].cards.size)
         game.player[0].playOption(Option.HIT)
@@ -43,7 +41,7 @@ class GameTest {
     fun `player hit no success`() {
         val game = Game()
         for(i in 0..5) //play 5 turns
-            game.player[0].cards.add(game.deck[game.cardIndex()])
+            game.player[0].cards.add(game.nextCard)
         //Can't hit since points > 21
         assertTrue(game.player[0].points[0] > 21)
         assertThrows(InvalidStateException::class.java) {
