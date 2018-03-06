@@ -12,7 +12,9 @@ class Deck(decks: Int, seed: Long = 0) : Iterable<Card> {
     companion object {
         val FULL_DECK =
                 Suit.values().flatMap {suit ->
-                    Rank.values().map {rank ->
+                    Rank.values().mapNotNull {rank ->
+                        if(suit == Suit.NONE || rank == Rank.NONE)
+                            return@mapNotNull null
                         Card(suit, rank)
                     }
                 }.toTypedArray()
