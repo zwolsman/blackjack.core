@@ -18,8 +18,12 @@ class Hand(val cards:ArrayList<Card>) {
                 if(card.rank == Rank.ACE)
                     aces += 1
             }
-            return (0..aces).map {
-                points + it * 10
+            return (0..aces).mapNotNull {
+                val p = points + it * 10
+                if(it == 0 || p <= 21)
+                    p
+                else
+                null
             }
         }
 

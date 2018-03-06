@@ -24,7 +24,7 @@ class HandTest {
     @Test
     fun `ace + ace + five`() {
         val hand = Hand(arrayListOf(ace, ace,five))
-        val expected = listOf(7,17,27)
+        val expected = listOf(7,17)
         assertEquals(expected, hand.points)
     }
 
