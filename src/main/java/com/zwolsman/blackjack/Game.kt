@@ -22,6 +22,8 @@ class Game(seed:Long = 0) {
         when(option) {
             Option.HIT -> {
                 hand.cards.add(deck[cardIndex()])
+                if(hand.points[0] > 21)
+                    hand.status = Status.BUSTED
             }
             Option.STAND -> {
                 hand.status = Status.FINISHED
