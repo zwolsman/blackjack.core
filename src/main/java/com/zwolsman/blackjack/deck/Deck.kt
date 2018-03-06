@@ -6,7 +6,7 @@ import com.zwolsman.blackjack.deck.card.Suit
 import com.zwolsman.blackjack.deck.shuffler.BasicShuffler
 import com.zwolsman.blackjack.deck.shuffler.IShuffler
 
-class Deck(decks: Int, seed: Long = 0) : Iterable<Card> {
+class Deck(decks: Int, val seed: Long = 0) : Iterable<Card> {
     private val shuffler: IShuffler = BasicShuffler(seed)
 
     companion object {
