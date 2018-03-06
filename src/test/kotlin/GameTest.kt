@@ -1,5 +1,6 @@
 import com.zwolsman.blackjack.Game
 import com.zwolsman.blackjack.deck.card.Card
+import com.zwolsman.blackjack.deck.card.Card.Companion.BLANK
 import com.zwolsman.blackjack.deck.card.Rank
 import com.zwolsman.blackjack.deck.card.Suit
 import com.zwolsman.blackjack.game.Option
@@ -14,15 +15,16 @@ class GameTest {
         val game = Game()
         val nextCard = game.deck[game.cardIndex()]
 
-        assertEquals(3, game.cardIndex())
-        assertEquals(Card(Suit.HEARTS, Rank.QUEEN), nextCard)
+        assertEquals(4, game.cardIndex())
+        assertEquals(Card(Suit.CLUBS, Rank.FOUR), nextCard)
     }
 
     @Test
     fun `test initial states`() {
         val game = Game()
         assertEquals(1, game.player.size)
-        assertEquals(1, game.dealer.cards.size)
+        assertEquals(2, game.dealer.cards.size)
+        assertEquals(BLANK, game.dealer.cards[1])
         assertEquals(2, game.player[0].cards.size)
     }
 
