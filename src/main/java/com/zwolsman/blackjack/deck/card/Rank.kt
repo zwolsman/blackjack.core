@@ -13,5 +13,6 @@ enum class Rank(val icon:String, val points:Int) {
     JACK("J",10),
     QUEEN("Q",10),
     KING("K",10),
-    ACE("A",1)
+    ACE("A",1),
+    NONE("-", 0)
 }
