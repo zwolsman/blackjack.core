@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import sun.plugin.dom.exception.InvalidStateException
 
 class GameTest {
-
     @Test
     fun `initial game card index`() {
         val game = Game()
@@ -63,13 +62,24 @@ class GameTest {
     }
 
     @Test
-    fun `can recreate game with seed and hand count`() {
+    fun `can recreate game with seed and hand count, 2 cards`() {
         val seed = 7903218775403745707
         val expectedHands = listOf(Hand("♦ 10, ♦ J".toCards()))
         val expectedDealer = Hand("♦ 7, - -".toCards())
 
         val game = Game(seed, 2)
 
+        assertIterableEquals(expectedHands, game.player)
+        assertEquals(expectedDealer, game.dealer)
+    }
+
+    @Test
+    fun `can recreate game with seed and hand count, more than 2 cards`() {
+        val seed = -2061957228015400700
+        val expectedHands = listOf(Hand("♠ 4, ♠ 10, ♦ 2".toCards()))
+        val expectedDealer = Hand("♦ 6, - -".toCards())
+
+        val game = Game(seed, 3)
         assertIterableEquals(expectedHands, game.player)
         assertEquals(expectedDealer, game.dealer)
     }
