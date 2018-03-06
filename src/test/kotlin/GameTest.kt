@@ -3,7 +3,9 @@ import com.zwolsman.blackjack.deck.card.Card
 import com.zwolsman.blackjack.deck.card.Card.Companion.BLANK
 import com.zwolsman.blackjack.deck.card.Rank
 import com.zwolsman.blackjack.deck.card.Suit
+import com.zwolsman.blackjack.game.Hand
 import com.zwolsman.blackjack.game.Option
+import com.zwolsman.blackjack.game.Status
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import sun.plugin.dom.exception.InvalidStateException
@@ -49,4 +51,14 @@ class GameTest {
         }
     }
 
+    @Test
+    fun `when player hits 21 and no hand can be played, dealer will play`() {
+        val game = Game()
+        game.player[0].playOption(Option.HIT)
+        game.player[0].playOption(Option.HIT)
+
+        assertEquals(Status.FINISHED, game.player[0].status)
+        assertEquals(Status.FINISHED, game.dealer.status)
+        assertTrue(game.isFinished)
+    }
 }
