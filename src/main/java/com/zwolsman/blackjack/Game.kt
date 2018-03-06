@@ -70,6 +70,11 @@ class Game(seed:Long = 0) {
         dealer.playOption = ::playOption
     }
 
+    val isFinished: Boolean
+        get() =
+            (dealer.status == Status.FINISHED || dealer.status == Status.BUSTED) &&
+                    player.all { it.status == Status.FINISHED || it.status == Status.BUSTED }
+
     private val Hand.hasBlank: Boolean
         get() = this.cards.any { it == Card.BLANK }
 }

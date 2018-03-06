@@ -45,5 +45,6 @@ class DealerTest {
 
         assertNotSame(after, before)
         assertTrue(game.dealer.points.last() >= 17)
+        assertTrue(game.isFinished)
     }
 }
