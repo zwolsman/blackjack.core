@@ -35,6 +35,6 @@ class Hand(val cards:ArrayList<Card>) {
     fun playOption(option: Option) = playOption(this, option)
 
     override fun toString(): String {
-        return ("Hand(POINTS=$points, CARDS=[${cards.map { it.icon }.joinToString(separator = ", ")}], OPTIONS=[${options.map { it.toString() }.joinToString(",")}], SATATUS=$status)")
+        return ("Hand(POINTS=$points, CARDS=[${cards.map { it.icon }.joinToString(separator = ", ")}], OPTIONS=[${options.map { it.toString() }.joinToString(",")}], STATUS=$status)")
     }
 }
