@@ -56,7 +56,26 @@ class Hand(cards:Iterable<Card>) {
             status = Status.FINISHED
     }
 
+
     override fun toString(): String {
         return ("Hand(POINTS=$points, CARDS=[${cards.joinToString {it.icon}}], OPTIONS=$options, STATUS=$status)")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Hand
+
+        if (status != other.status) return false
+        if (cards != other.cards) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = status.hashCode()
+        result = 31 * result + cards.hashCode()
+        return result
     }
 }
