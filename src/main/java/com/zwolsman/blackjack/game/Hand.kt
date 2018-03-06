@@ -45,6 +45,8 @@ class Hand(cards:Iterable<Card>) {
         playOption(this, option)
         if(points.first() > 21)
             status = Status.BUSTED
+        if(points.first() == 21)
+            status = Status.FINISHED
     }
 
     override fun toString(): String {
