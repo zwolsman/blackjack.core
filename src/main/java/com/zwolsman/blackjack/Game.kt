@@ -7,9 +7,9 @@ import com.zwolsman.blackjack.game.Option
 import com.zwolsman.blackjack.game.Status
 import sun.plugin.dom.exception.InvalidStateException
 
-class Game {
+class Game(seed:Long = 0) {
 
-    val deck = Deck(1)
+    val deck = Deck(1, seed)
     val dealer = Hand(deck.cards[1], Card.BLANK)
     val player = listOf(Hand(deck.cards[0], deck.cards[2]))
     private val stopsAtSoft17 = true
@@ -55,7 +55,7 @@ class Game {
             {
                 dealer.status = Status.BUSTED
                 break
-            } else if (points > 17) {
+            } else if (points >= 17) {
                 break
             }
 

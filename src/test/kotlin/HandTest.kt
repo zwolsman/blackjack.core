@@ -39,7 +39,6 @@ class HandTest {
     fun `can split`() {
         val hand = Hand(five, five)
         assertTrue(hand.options.contains(Option.SPLIT))
-        println(hand.toString())
     }
 
     @Test
