@@ -41,7 +41,7 @@ class GameTest {
     fun `player hit no success`() {
         val game = Game()
         for(i in 0..5) //play 5 turns
-            game.player[0].cards.add(game.nextCard)
+            game.player[0].addCard(game.nextCard)
         //Can't hit since points > 21
         assertTrue(game.player[0].points[0] > 21)
         assertThrows(InvalidStateException::class.java) {

@@ -63,7 +63,7 @@ class HandTest {
         assertTrue(Option.HIT.isAvailable(hand))
         hand.playOption = {h, option ->
             if(option == Option.HIT)
-                h.cards.add(king)
+                h.addCard(king)
         }
         hand.playOption(Option.HIT)
 

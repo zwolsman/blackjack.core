@@ -3,6 +3,7 @@ package com.zwolsman.blackjack.game
 import com.zwolsman.blackjack.deck.card.Card
 import com.zwolsman.blackjack.deck.card.Rank
 import sun.plugin.dom.exception.InvalidStateException
+import java.util.Collections.unmodifiableList
 
 class Hand(cards:Iterable<Card>) {
     constructor(card:Card) : this(arrayListOf(card))
@@ -43,6 +44,10 @@ class Hand(cards:Iterable<Card>) {
             throw InvalidStateException("Option $option not in available options $options")
 
         playOption(this, option)
+    }
+
+    fun addCard(card:Card){
+        cards.add(card)
         if(points.first() > 21)
             status = Status.BUSTED
         if(points.first() == 21)

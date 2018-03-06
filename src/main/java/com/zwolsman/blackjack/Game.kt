@@ -21,17 +21,17 @@ class Game(seed:Long = 0) {
     private fun playOption(hand: Hand, option: Option) {
         when(option) {
             Option.HIT -> {
-                hand.cards.add(nextCard)
+                hand.addCard(nextCard)
             }
             Option.STAND -> {
                 hand.status = Status.FINISHED
-                if(player.none { it.status.canPlay })
-                    playDealer()
             }
             Option.SPLIT -> TODO()
             Option.DOUBLE -> TODO()
             Option.INSURANCE -> TODO()
         }
+        if(player.none { it.status.canPlay })
+            playDealer()
     }
 
 
