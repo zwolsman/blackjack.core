@@ -24,7 +24,7 @@ class Hand(cards:Iterable<Card>) {
         }
 
     val isBlackjack:Boolean
-        get() = cards.size == 2 && points.last() == 21
+        get() = cards.size == 2 && points.any { it == 21 }
 
     internal val hasBlank: Boolean
         get() = this.cards.any { it == Card.BLANK }
@@ -46,7 +46,7 @@ class Hand(cards:Iterable<Card>) {
         cards.add(card)
         if(points.first() > 21)
             status = Status.BUSTED
-        if(points.first() == 21 || isBlackjack)
+        if(points.any { it == 21 })
             status = Status.FINISHED
     }
 
