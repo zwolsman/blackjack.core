@@ -89,4 +89,18 @@ class HandTest {
             assertTrue(hand.isBlackjack)
         }
     }
+
+    fun `can contract an insurance`() {
+
+        val hand = Hand("♦ A, - -".toCards())
+        assertTrue(hand.options.contains(Option.INSURANCE))
+    }
+    fun `can't contract an insurance`() {
+
+        val hand = Hand("♦ A, ♦ A".toCards())
+        assertTrue(hand.options.contains(Option.INSURANCE))
+    }
+
+
+
 }

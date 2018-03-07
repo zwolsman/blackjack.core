@@ -1,5 +1,6 @@
 package com.zwolsman.blackjack.core.game
 
+import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.deck.card.Rank
 
 enum class Option {
@@ -21,12 +22,9 @@ enum class Option {
     },
     INSURANCE {
         override fun isAvailable(hand: Hand): Boolean {
-            if(hand.cards.size != 1)
+            if(hand.cards.size != 2 || !hand.cards.any { it == Card.BLANK })
                 return false
-            return when(hand.cards[0].rank) {
-                Rank.TEN, Rank.JACK, Rank.QUEEN, Rank.KING, Rank.ACE -> true
-                else -> false
-            }
+            return hand.cards[0].rank == Rank.ACE
         }
     };
 
