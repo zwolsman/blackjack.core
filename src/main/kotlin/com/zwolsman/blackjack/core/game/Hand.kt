@@ -26,6 +26,9 @@ class Hand(cards:Iterable<Card>) {
     val isBlackjack:Boolean
         get() = cards.size == 2 && points.last() == 21
 
+    internal val hasBlank: Boolean
+        get() = this.cards.any { it == Card.BLANK }
+
     var status = Status.OK
 
     val cards:ArrayList<Card> = cards.toCollection(ArrayList())

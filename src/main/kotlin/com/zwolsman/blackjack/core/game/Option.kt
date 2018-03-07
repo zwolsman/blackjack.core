@@ -22,7 +22,7 @@ enum class Option {
     },
     INSURANCE {
         override fun isAvailable(hand: Hand): Boolean {
-            if(hand.cards.size != 2 || !hand.cards.any { it == Card.BLANK })
+            if(hand.cards.size != 2 || !hand.hasBlank)
                 return false
             return hand.cards[0].rank == Rank.ACE
         }

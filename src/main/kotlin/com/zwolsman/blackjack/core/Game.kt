@@ -87,8 +87,5 @@ class Game(seed:Long = 0) {
     val isFinished: Boolean
         get() =
             !dealer.status.canPlay && player.none { it.status.canPlay }
-
-    private val Hand.hasBlank: Boolean
-        get() = this.cards.any { it == Card.BLANK }
 }
 
