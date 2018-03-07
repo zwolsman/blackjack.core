@@ -1,4 +1,4 @@
-package com.zwolsman.blackjack.game
+package com.zwolsman.blackjack.core.game
 
 enum class Status {
     OK,

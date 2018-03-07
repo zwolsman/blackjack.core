@@ -1,10 +1,10 @@
-package com.zwolsman.blackjack
+package com.zwolsman.blackjack.core
 
-import com.zwolsman.blackjack.deck.Deck
-import com.zwolsman.blackjack.deck.card.Card
-import com.zwolsman.blackjack.game.Hand
-import com.zwolsman.blackjack.game.Option
-import com.zwolsman.blackjack.game.Status
+import com.zwolsman.blackjack.core.deck.Deck
+import com.zwolsman.blackjack.core.deck.card.Card
+import com.zwolsman.blackjack.core.game.Hand
+import com.zwolsman.blackjack.core.game.Option
+import com.zwolsman.blackjack.core.game.Status
 
 class Game(seed:Long = 0) {
     constructor(seed:Long, vararg handCount:Int) : this(seed) {
@@ -26,7 +26,7 @@ class Game(seed:Long = 0) {
     private val cardIndex:Int
             get() = dealer.cards.size + player.map { it.cards.size }.sum()
 
-    val nextCard:Card
+    val nextCard: Card
         get() = deck[cardIndex]
 
     private fun playOption(hand: Hand, option: Option) {

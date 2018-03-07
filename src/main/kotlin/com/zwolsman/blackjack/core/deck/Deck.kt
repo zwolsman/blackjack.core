@@ -1,18 +1,18 @@
-package com.zwolsman.blackjack.deck
+package com.zwolsman.blackjack.core.deck
 
-import com.zwolsman.blackjack.deck.card.Card
-import com.zwolsman.blackjack.deck.card.Rank
-import com.zwolsman.blackjack.deck.card.Suit
-import com.zwolsman.blackjack.deck.shuffler.BasicShuffler
-import com.zwolsman.blackjack.deck.shuffler.IShuffler
+import com.zwolsman.blackjack.core.deck.card.Card
+import com.zwolsman.blackjack.core.deck.card.Rank
+import com.zwolsman.blackjack.core.deck.card.Suit
+import com.zwolsman.blackjack.core.deck.shuffler.BasicShuffler
+import com.zwolsman.blackjack.core.deck.shuffler.IShuffler
 
 class Deck(decks: Int, val seed: Long = 0) : Iterable<Card> {
     private val shuffler: IShuffler = BasicShuffler(seed)
 
     companion object {
         val FULL_DECK =
-                Suit.values().flatMap {suit ->
-                    Rank.values().mapNotNull {rank ->
+                Suit.values().flatMap { suit ->
+                    Rank.values().mapNotNull { rank ->
                         if(suit == Suit.NONE || rank == Rank.NONE)
                             return@mapNotNull null
                         Card(suit, rank)

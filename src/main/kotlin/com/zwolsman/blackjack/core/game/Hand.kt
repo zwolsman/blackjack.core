@@ -1,12 +1,12 @@
-package com.zwolsman.blackjack.game
+package com.zwolsman.blackjack.core.game
 
-import com.zwolsman.blackjack.deck.card.Card
-import com.zwolsman.blackjack.deck.card.Rank
+import com.zwolsman.blackjack.core.deck.card.Card
+import com.zwolsman.blackjack.core.deck.card.Rank
 import sun.plugin.dom.exception.InvalidStateException
 
 class Hand(cards:Iterable<Card>) {
     constructor() : this(arrayListOf())
-    constructor(vararg cards:Card) : this(cards.asIterable())
+    constructor(vararg cards: Card) : this(cards.asIterable())
 
     val points:List<Int>
         get() {
@@ -48,7 +48,7 @@ class Hand(cards:Iterable<Card>) {
         playOption(this, option)
     }
 
-    fun addCard(card:Card){
+    fun addCard(card: Card){
         cards.add(card)
         if(points.first() > 21)
             status = Status.BUSTED

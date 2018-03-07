@@ -1,5 +1,5 @@
-import com.zwolsman.blackjack.game.Hand
-import com.zwolsman.blackjack.game.Option
+import com.zwolsman.blackjack.core.game.Hand
+import com.zwolsman.blackjack.core.game.Option
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import sun.plugin.dom.exception.InvalidStateException
@@ -20,7 +20,7 @@ class HandTest {
 
     @Test
     fun `ace + ace + five`() {
-        val hand = Hand(arrayListOf(ace, ace,five))
+        val hand = Hand(arrayListOf(ace, ace, five))
         val expected = listOf(7,17)
         assertEquals(expected, hand.points)
     }

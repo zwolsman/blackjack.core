@@ -1,6 +1,6 @@
-package com.zwolsman.blackjack.game
+package com.zwolsman.blackjack.core.game
 
-import com.zwolsman.blackjack.deck.card.Rank
+import com.zwolsman.blackjack.core.deck.card.Rank
 
 enum class Option {
     STAND,

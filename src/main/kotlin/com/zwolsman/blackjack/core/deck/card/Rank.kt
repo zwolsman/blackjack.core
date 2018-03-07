@@ -1,4 +1,4 @@
-package com.zwolsman.blackjack.deck.card
+package com.zwolsman.blackjack.core.deck.card
 
 enum class Rank(val icon:String, val points:Int) {
     DEUCE("2",2),

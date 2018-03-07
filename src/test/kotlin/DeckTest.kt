@@ -1,7 +1,7 @@
-import com.zwolsman.blackjack.deck.Deck
-import com.zwolsman.blackjack.deck.card.Card
-import com.zwolsman.blackjack.deck.card.Rank
-import com.zwolsman.blackjack.deck.card.Suit
+import com.zwolsman.blackjack.core.deck.Deck
+import com.zwolsman.blackjack.core.deck.card.Card
+import com.zwolsman.blackjack.core.deck.card.Rank
+import com.zwolsman.blackjack.core.deck.card.Suit
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

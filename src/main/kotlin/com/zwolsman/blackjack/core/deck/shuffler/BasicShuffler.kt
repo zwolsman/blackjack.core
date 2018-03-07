@@ -1,6 +1,6 @@
-package com.zwolsman.blackjack.deck.shuffler
+package com.zwolsman.blackjack.core.deck.shuffler
 
-import com.zwolsman.blackjack.deck.card.Card
+import com.zwolsman.blackjack.core.deck.card.Card
 import java.util.*
 
 class BasicShuffler(override val seed: Long) : IShuffler {

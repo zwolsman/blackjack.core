@@ -1,5 +1,5 @@
-import com.zwolsman.blackjack.Game
-import com.zwolsman.blackjack.game.Option
+import com.zwolsman.blackjack.core.Game
+import com.zwolsman.blackjack.core.game.Option
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
