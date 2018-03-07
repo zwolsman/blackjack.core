@@ -39,7 +39,9 @@ class Game(seed:Long = 0) {
             }
             Option.SPLIT -> {
                 val card = hand.cards.removeAt(1)
-                player.add(Hand(card))
+                val newHand = Hand(card)
+                newHand.playOption = ::playOption
+                player.add(newHand)
                 fillHands()
             }
             Option.DOUBLE -> TODO()
