@@ -21,7 +21,7 @@ class Game(seed:Long = 0) {
 
     val deck = Deck(1, seed)
     val dealer = Hand(deck.cards[1], Card.BLANK)
-    val player = listOf(Hand(deck.cards[0], deck.cards[2]))
+    val player = mutableListOf(Hand(deck.cards[0], deck.cards[2]))
 
     private val cardIndex:Int
             get() = dealer.cards.size + player.map { it.cards.size }.sum()
@@ -37,12 +37,22 @@ class Game(seed:Long = 0) {
             Option.STAND -> {
                 hand.status = Status.FINISHED
             }
-            Option.SPLIT -> TODO()
+            Option.SPLIT -> {
+                val card = hand.cards.removeAt(1)
+                player.add(Hand(card))
+                fillHands()
+            }
             Option.DOUBLE -> TODO()
             Option.INSURANCE -> TODO()
         }
         if(player.none { it.status.canPlay })
             playDealer()
+    }
+
+    private fun fillHands() {
+        for(hand in player)
+            if(hand.cards.size < 2)
+                hand.cards.add(nextCard)
     }
 
 

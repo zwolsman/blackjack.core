@@ -83,4 +83,18 @@ class GameTest {
         assertIterableEquals(expectedHands, game.player)
         assertEquals(expectedDealer, game.dealer)
     }
+
+
+    @Test
+    fun `split hand`() {
+        val seed = 6937158363516017698
+        val game = Game(seed)
+        assertEquals(1, game.player.size)
+        assertTrue(game.player[0].options.contains(Option.SPLIT))
+        game.player[0].playOption(Option.SPLIT)
+        assertEquals(2, game.player.size)
+
+        val hands = listOf(Hand("♣ 5, ♥ A".toCards()), Hand("♥ 5, ♣ J".toCards()))
+        assertIterableEquals(hands, game.player)
+    }
 }
