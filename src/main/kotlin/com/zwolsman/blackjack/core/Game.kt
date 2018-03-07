@@ -52,7 +52,7 @@ class Game(seed:Long = 0) {
     private fun fillHands() {
         for(hand in player)
             if(hand.cards.size < 2)
-                hand.cards.add(nextCard)
+                hand.addCard(nextCard)
     }
 
 
