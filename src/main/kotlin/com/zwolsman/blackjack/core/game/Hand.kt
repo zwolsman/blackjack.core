@@ -43,7 +43,7 @@ class Hand(cards:Iterable<Card>) {
         cards.add(card)
         if(points.first() > 21)
             status = Status.BUSTED
-        if(points.first() == 21)
+        if(points.first() == 21 || isBlackjack)
             status = Status.FINISHED
     }
 
