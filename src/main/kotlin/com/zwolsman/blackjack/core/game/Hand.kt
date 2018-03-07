@@ -10,21 +10,11 @@ class Hand(cards:Iterable<Card>) {
 
     val points:List<Int>
         get() {
+            val aces = cards.count { it.rank == Rank.ACE }
+            val basePoints = cards.sumBy { it.rank.points }
 
-            var aces = 0
-            var points = 0
-
-            for(card in cards) {
-                points += card.rank.points
-                if(card.rank == Rank.ACE)
-                    aces += 1
-            }
-            return (0..aces).mapNotNull {
-                val p = points + it * 10
-                if(it == 0 || p <= 21)
-                    p
-                else
-                null
+            return (0..aces).map { basePoints + it * 10 }.filterIndexed {index, i ->
+                index == 0 || i <= 21
             }
         }
 
@@ -37,6 +27,7 @@ class Hand(cards:Iterable<Card>) {
         get() = cards.size == 2 && points.last() == 21
 
     var status = Status.OK
+
     val cards:ArrayList<Card> = cards.toCollection(ArrayList())
 
     internal lateinit var playOption:(Hand, Option) -> Unit
@@ -55,7 +46,6 @@ class Hand(cards:Iterable<Card>) {
         if(points.first() == 21)
             status = Status.FINISHED
     }
-
 
     override fun toString(): String {
         return ("Hand(POINTS=$points, CARDS=[${cards.joinToString {it.icon}}], OPTIONS=$options, STATUS=$status)")
