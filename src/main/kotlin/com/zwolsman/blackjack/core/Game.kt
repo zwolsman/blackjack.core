@@ -15,16 +15,16 @@ class Game(seed: Long = 0) {
 
         for ((index, h) in handCount.withIndex())
             for (i in 0 until h - 2) {
-                player[index].playOption(Option.HIT)
+                hands[index].playOption(Option.HIT)
             }
     }
 
     val deck = Deck(1, seed)
     val dealer = Hand()
-    val player = mutableListOf(Hand())
+    val hands = mutableListOf(Hand())
 
     init {
-        player.forEach { it.playOption = ::playOption }
+        hands.forEach { it.playOption = ::playOption }
         dealer.playOption = ::playOption
         fillHands(true)
         checkHands()
@@ -32,7 +32,7 @@ class Game(seed: Long = 0) {
 
     val isFinished: Boolean
         get() =
-            !dealer.status.canPlay && player.none { it.status.canPlay }
+            !dealer.status.canPlay && hands.none { it.status.canPlay }
 
     private fun playOption(hand: Hand, option: Option) {
         when (option) {
@@ -46,7 +46,7 @@ class Game(seed: Long = 0) {
                 val card = hand.cards.removeAt(1)
                 val newHand = Hand(card)
                 newHand.playOption = ::playOption
-                player.add(newHand)
+                hands.add(newHand)
                 fillHands()
             }
             Option.DOUBLE -> TODO()
@@ -56,13 +56,13 @@ class Game(seed: Long = 0) {
     }
 
     private fun checkHands() {
-        if (player.none { it.status.canPlay })
+        if (hands.none { it.status.canPlay })
             playDealer()
     }
 
     private fun fillHands(setup: Boolean = false) {
-        while (dealer.cards.size < 2 || player.any { it.cards.size < 2 }) {
-            for (hand in player) {
+        while (dealer.cards.size < 2 || hands.any { it.cards.size < 2 }) {
+            for (hand in hands) {
                 if (hand.cards.size < 2)
                     hand.addCard(deck.deal())
             }

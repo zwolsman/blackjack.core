@@ -15,34 +15,34 @@ class GameTest : Spek({
     given("a game") {
         val seed1: Long = 0
         context("seed $seed1") {
-            val subject = Game(seed1)
+            val game = Game(seed1)
             it("should be finished") {
-                assertTrue(subject.isFinished)
+                assertTrue(game.isFinished)
             }
 
             context("hands") {
                 it("should be 1") {
-                    assertEquals(1, subject.player.size)
+                    assertEquals(1, game.hands.size)
                 }
 
                 context("hand 0") {
                     it("has 2 cards") {
-                        assertEquals(2, subject.player[0].cards.size)
+                        assertEquals(2, game.hands[0].cards.size)
                     }
                     it("is a blackjack") {
-                        assertTrue(subject.player[0].isBlackjack)
+                        assertTrue(game.hands[0].isBlackjack)
                     }
                     it("is a blackjack") {
-                        assertTrue(subject.player[0].isBlackjack)
+                        assertTrue(game.hands[0].isBlackjack)
                     }
                 }
             }
             context("dealer") {
                 it("has no blanks") {
-                    assertFalse(subject.dealer.hasBlank)
+                    assertFalse(game.dealer.hasBlank)
                 }
                 it("is finished") {
-                    assertEquals(subject.dealer.status, Status.FINISHED)
+                    assertEquals(game.dealer.status, Status.FINISHED)
                 }
             }
         }
@@ -51,18 +51,18 @@ class GameTest : Spek({
         context("seed $seed2") {
             val game = Game(seed2)
             it("has the option to split") {
-                assertTrue(Option.SPLIT.isAvailable(game.player[0]))
+                assertTrue(Option.SPLIT.isAvailable(game.hands[0]))
             }
             it("has 1 hand") {
-                assertEquals(1, game.player.size)
+                assertEquals(1, game.hands.size)
             }
             it("splits hand") {
-                assertEquals(1, game.player.size)
-                game.player[0].playOption(Option.SPLIT)
-                assertEquals(2, game.player.size)
+                assertEquals(1, game.hands.size)
+                game.hands[0].playOption(Option.SPLIT)
+                assertEquals(2, game.hands.size)
                 val h1 = Hand("♣ 5, ♥ A".toCards())
                 val h2 = Hand("♥ 5, ♣ J".toCards())
-                assertIterableEquals(listOf(h1, h2), game.player)
+                assertIterableEquals(listOf(h1, h2), game.hands)
             }
         }
 
@@ -72,10 +72,10 @@ class GameTest : Spek({
             it("adds card to hand") {
                 val nextCard = game.deck.next
 
-                assertEquals(2, game.player[0].cards.size)
-                game.player[0].playOption(Option.HIT)
-                assertEquals(3, game.player[0].cards.size)
-                assertEquals(nextCard, game.player[0].cards.last())
+                assertEquals(2, game.hands[0].cards.size)
+                game.hands[0].playOption(Option.HIT)
+                assertEquals(3, game.hands[0].cards.size)
+                assertEquals(nextCard, game.hands[0].cards.last())
             }
         }
 
@@ -84,8 +84,8 @@ class GameTest : Spek({
             val game = Game(seed4)
             it("should let the dealer play if user busts") {
                 assertTrue(game.dealer.hasBlank)
-                while (game.player[0].status != Status.BUSTED)
-                    game.player[0].playOption(Option.HIT)
+                while (game.hands[0].status != Status.BUSTED)
+                    game.hands[0].playOption(Option.HIT)
 
                 assertFalse(game.dealer.hasBlank)
                 assertNotEquals(Status.OK, game.dealer.status)
@@ -110,7 +110,7 @@ class GameTest : Spek({
                 val game = Game(it.seed, it.cardCount)
                 context("player") {
                     it("has ${it.cardCount} cards in hand") {
-                        assertEquals(it.cardCount, game.player[0].cards.size)
+                        assertEquals(it.cardCount, game.hands[0].cards.size)
                     }
                 }
                 context("dealer") {
