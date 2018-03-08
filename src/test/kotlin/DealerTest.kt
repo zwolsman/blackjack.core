@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Assertions.*
 
 class DealerTest : Spek({
     context("static seed") {
-        given("a game with seed 0") {
+        given("a game with seed 1") {
             with("seed 0") {
-                val game = Game(0)
+                val game = Game(1)
                 on("player stand") {
                     game.player[0].playOption(Option.STAND)
                     it("should finish the game and have 20 points") {
-                        val expectedCards = "♣ K, ♥ Q".toCards()
-                        val expectedPoints = 20
+                        val expectedCards = "♥ 2, ♥ 8, ♥ 4, ♥ 5".toCards()
+                        val expectedPoints = 19
                         assertIterableEquals(expectedCards, game.dealer.cards)
                         assertEquals(listOf(expectedPoints), game.dealer.points)
                         assertTrue(game.isFinished)

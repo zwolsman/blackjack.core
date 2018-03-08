@@ -4,26 +4,26 @@ import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.deck.card.Rank
 import sun.plugin.dom.exception.InvalidStateException
 
-class Hand(cards:Iterable<Card>) {
+class Hand(cards: Iterable<Card>) {
     constructor() : this(arrayListOf())
     constructor(vararg cards: Card) : this(cards.asIterable())
 
-    val points:List<Int>
+    val points: List<Int>
         get() {
             val aces = cards.count { it.rank == Rank.ACE }
             val basePoints = cards.sumBy { it.rank.points }
-
-            return (0..aces).map { basePoints + it * 10 }.filterIndexed {index, i ->
+            val options = (0..aces).map { basePoints + it * 10 }.filterIndexed { index, i ->
                 index == 0 || i <= 21
             }
+            return if (options.any { it == 21 }) listOf(21) else options
         }
 
-    val options:List<Option>
+    val options: List<Option>
         get() = Option.values().filter {
             it.isAvailable(this)
         }
 
-    val isBlackjack:Boolean
+    val isBlackjack: Boolean
         get() = cards.size == 2 && points.any { it == 21 }
 
     internal val hasBlank: Boolean
@@ -31,27 +31,34 @@ class Hand(cards:Iterable<Card>) {
 
     var status = Status.OK
 
-    val cards:ArrayList<Card> = cards.toCollection(ArrayList())
+    val cards: ArrayList<Card> = cards.toCollection(ArrayList())
 
-    internal lateinit var playOption:(Hand, Option) -> Unit
-
-    fun playOption(option: Option) {
-        if(!options.contains(option))
-            throw InvalidStateException("Option $option not in available options $options")
-
-        playOption(this, option)
+    init {
+        if (points.first() > 21)
+            status = Status.BUSTED
+        if (points.any { it == 21 })
+            status = Status.FINISHED
     }
 
-    fun addCard(card: Card){
+    internal var playOption: ((Hand, Option) -> Unit)? = null
+
+    fun playOption(option: Option) {
+        if (!options.contains(option))
+            throw InvalidStateException("Option $option not in available options $options")
+
+        playOption?.invoke(this, option)
+    }
+
+    fun addCard(card: Card) {
         cards.add(card)
-        if(points.first() > 21)
+        if (points.first() > 21)
             status = Status.BUSTED
-        if(points.any { it == 21 })
+        if (points.any { it == 21 })
             status = Status.FINISHED
     }
 
     override fun toString(): String {
-        return ("Hand(POINTS=$points, CARDS=[${cards.joinToString {it.icon}}], OPTIONS=$options, STATUS=$status)")
+        return ("Hand(POINTS=$points, CARDS=[${cards.joinToString { it.icon }}], OPTIONS=$options, STATUS=$status)")
     }
 
     override fun equals(other: Any?): Boolean {

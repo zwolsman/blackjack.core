@@ -28,8 +28,8 @@ class Game(seed: Long = 0) {
         player.forEach { it.playOption = ::playOption }
         dealer.playOption = ::playOption
         fillHands(true)
+        checkHands()
     }
-
 
 
     private val cardIndex: Int
@@ -60,6 +60,10 @@ class Game(seed: Long = 0) {
             Option.DOUBLE -> TODO()
             Option.INSURANCE -> TODO()
         }
+        checkHands()
+    }
+
+    private fun checkHands() {
         if (player.none { it.status.canPlay })
             playDealer()
     }
