@@ -32,8 +32,17 @@ class Deck(decks: Int, val seed: Long = 0) : Iterable<Card> {
         shuffler.shuffle(cards)
     }
 
-    override fun iterator() = cards.iterator()
+    override fun iterator() = cards.stream().skip(index.toLong()).iterator()!!
     operator fun get(index: Int): Card = cards[index]
+
+    private var index = 0
+
+    fun deal(blank: Boolean = false) = if (blank) {
+        index++
+        Card.BLANK
+    } else {
+        cards[index++]
+    }
 
     override fun toString(): String {
         return "DECK(${cards.joinToString { it.icon }})"

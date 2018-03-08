@@ -1,4 +1,6 @@
 import com.zwolsman.blackjack.core.Game
+import com.zwolsman.blackjack.core.deck.Deck
+import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
 import com.zwolsman.blackjack.core.game.Status
@@ -68,7 +70,7 @@ class GameTest : Spek({
         context("seed $seed3") {
             val game = Game(seed3)
             it("adds card to hand") {
-                val nextCard = game.nextCard
+                val nextCard = game.deck.next
 
                 assertEquals(2, game.player[0].cards.size)
                 game.player[0].playOption(Option.HIT)
@@ -124,3 +126,6 @@ class GameTest : Spek({
 
     }
 })
+
+private val Deck.next: Card
+    get() = this.first()

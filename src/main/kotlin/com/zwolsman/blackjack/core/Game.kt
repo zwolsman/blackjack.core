@@ -1,7 +1,6 @@
 package com.zwolsman.blackjack.core
 
 import com.zwolsman.blackjack.core.deck.Deck
-import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
 import com.zwolsman.blackjack.core.game.Status
@@ -31,13 +30,6 @@ class Game(seed: Long = 0) {
         checkHands()
     }
 
-
-    private val cardIndex: Int
-        get() = dealer.cards.size + player.sumBy { it.cards.size }
-
-    val nextCard: Card
-        get() = deck[cardIndex]
-
     val isFinished: Boolean
         get() =
             !dealer.status.canPlay && player.none { it.status.canPlay }
@@ -45,7 +37,7 @@ class Game(seed: Long = 0) {
     private fun playOption(hand: Hand, option: Option) {
         when (option) {
             Option.HIT -> {
-                hand.addCard(nextCard)
+                hand.addCard(deck.deal())
             }
             Option.STAND -> {
                 hand.status = Status.FINISHED
@@ -72,18 +64,15 @@ class Game(seed: Long = 0) {
         while (dealer.cards.size < 2 || player.any { it.cards.size < 2 }) {
             for (hand in player) {
                 if (hand.cards.size < 2)
-                    hand.addCard(nextCard)
+                    hand.addCard(deck.deal())
             }
             if (!setup || dealer.cards.size >= 2)
                 continue
 
-            when (dealer.cards.size) {
-                1 -> dealer.addCard(Card.BLANK)
-                else -> dealer.addCard(nextCard)
-            }
+            val dealBlank = dealer.cards.size == 1
+            dealer.addCard(deck.deal(dealBlank))
         }
     }
-
 
     private fun playDealer(stopsAtSoft17: Boolean = true) {
         while (true) {
