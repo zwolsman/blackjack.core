@@ -2,12 +2,10 @@ import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.deck.card.Rank
 import com.zwolsman.blackjack.core.deck.card.Suit
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 
 class CardTest : Spek({
     given("a card") {
