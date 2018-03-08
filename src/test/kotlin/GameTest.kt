@@ -1,100 +1,126 @@
 import com.zwolsman.blackjack.core.Game
-import com.zwolsman.blackjack.core.deck.card.Card
-import com.zwolsman.blackjack.core.deck.card.Card.Companion.BLANK
-import com.zwolsman.blackjack.core.deck.card.Rank
-import com.zwolsman.blackjack.core.deck.card.Suit
 import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
 import com.zwolsman.blackjack.core.game.Status
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.context
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import sun.plugin.dom.exception.InvalidStateException
 
-class GameTest {
-    @Test
-    fun `initial game card index`() {
-        val game = Game()
-        val nextCard = game.nextCard
-        assertEquals(Card(Suit.CLUBS, Rank.FOUR), nextCard)
-    }
+class GameTest : Spek({
 
-    @Test
-    fun `test initial states`() {
-        val game = Game()
-        assertEquals(1, game.player.size)
-        assertEquals(2, game.dealer.cards.size)
-        assertEquals(BLANK, game.dealer.cards[1])
-        assertEquals(2, game.player[0].cards.size)
-    }
+    given("a game") {
+        val seed1: Long = 0
+        context("seed $seed1") {
+            val subject = Game(seed1)
+            it("should be finished") {
+                assertTrue(subject.isFinished)
+            }
 
-    @Test
-    fun `player hit success`() {
-        val game = Game()
-        val nextCard = game.nextCard
+            context("hands") {
+                it("should be 1") {
+                    assertEquals(1, subject.player.size)
+                }
 
-        assertEquals(2, game.player[0].cards.size)
-        game.player[0].playOption(Option.HIT)
-        assertEquals(3, game.player[0].cards.size)
-        assertEquals(nextCard, game.player[0].cards.last())
-    }
+                context("hand 0") {
+                    it("has 2 cards") {
+                        assertEquals(2, subject.player[0].cards.size)
+                    }
+                    it("is a blackjack") {
+                        assertTrue(subject.player[0].isBlackjack)
+                    }
+                    it("is a blackjack") {
+                        assertTrue(subject.player[0].isBlackjack)
+                    }
+                }
+            }
+            context("dealer") {
+                it("has no blanks") {
+                    assertFalse(subject.dealer.hasBlank)
+                }
+                it("is finished") {
+                    assertEquals(subject.dealer.status, Status.FINISHED)
+                }
+            }
+        }
 
-    @Test
-    fun `player hit no success`() {
-        val game = Game()
-        for(i in 0..5) //play 5 turns
-            game.player[0].addCard(game.nextCard)
-        //Can't hit since points > 21
-        assertTrue(game.player[0].points[0] > 21)
-        assertThrows(InvalidStateException::class.java) {
-            game.player[0].playOption(Option.HIT)
+        val seed2 = 6937158363516017698
+        context("seed $seed2") {
+            val game = Game(seed2)
+            it("has the option to split") {
+                assertTrue(Option.SPLIT.isAvailable(game.player[0]))
+            }
+            it("has 1 hand") {
+                assertEquals(1, game.player.size)
+            }
+            it("splits hand") {
+                assertEquals(1, game.player.size)
+                game.player[0].playOption(Option.SPLIT)
+                assertEquals(2, game.player.size)
+                val h1 = Hand("♣ 5, ♥ A".toCards())
+                val h2 = Hand("♥ 5, ♣ J".toCards())
+                assertIterableEquals(listOf(h1, h2), game.player)
+            }
+        }
+
+        val seed3 = 5631132222
+        context("seed $seed3") {
+            val game = Game(seed3)
+            it("adds card to hand") {
+                val nextCard = game.nextCard
+
+                assertEquals(2, game.player[0].cards.size)
+                game.player[0].playOption(Option.HIT)
+                assertEquals(3, game.player[0].cards.size)
+                assertEquals(nextCard, game.player[0].cards.last())
+            }
+        }
+
+        val seed4 = 98776545890
+        context("seed $seed4") {
+            val game = Game(seed4)
+            it("should let the dealer play if user busts") {
+                assertTrue(game.dealer.hasBlank)
+                while (game.player[0].status != Status.BUSTED)
+                    game.player[0].playOption(Option.HIT)
+
+                assertFalse(game.dealer.hasBlank)
+                assertNotEquals(Status.OK, game.dealer.status)
+                assertTrue(game.isFinished)
+            }
         }
     }
 
-    @Test
-    fun `when player hits 21 and no hand can be played, dealer will play`() {
-        val game = Game()
-        game.player[0].playOption(Option.HIT)
-        game.player[0].playOption(Option.HIT)
+    given("a seed and hand count") {
+        data class TestData(val seed: Long, val expectedHand: String, val expectedDealer: String) {
+            val cardCount: Int
+                get() = expectedHand.toCards().size
+            val dealerCount: Int
+                get() = expectedDealer.toCards().size
+        }
 
-        assertEquals(Status.FINISHED, game.player[0].status)
-        assertEquals(Status.FINISHED, game.dealer.status)
-        assertTrue(game.isFinished)
+        listOf(
+                TestData(7903218775403745707, "♦ 10, ♦ J", "♦ 7, - -"),
+                TestData(-2061957228015400700, "♠ 4, ♠ 10, ♦ 2", "♦ 6, - -")
+        ).forEach {
+            context("seed ${it.seed}, card count: ${it.cardCount}") {
+                val game = Game(it.seed, it.cardCount)
+                context("player") {
+                    it("has ${it.cardCount} cards in hand") {
+                        assertEquals(it.cardCount, game.player[0].cards.size)
+                    }
+                }
+                context("dealer") {
+                    it("has ${it.dealerCount} cards in hand") {
+                        assertEquals(it.dealerCount, game.dealer.cards.size)
+                    }
+                    it("has ${it.expectedDealer}") {
+                        assertIterableEquals(it.expectedDealer.toCards(), game.dealer.cards)
+                    }
+                }
+            }
+        }
+
     }
-
-    @Test
-    fun `can recreate game with seed and hand count, 2 cards`() {
-        val seed = 7903218775403745707
-        val expectedHands = listOf(Hand("♦ 10, ♦ J".toCards()))
-        val expectedDealer = Hand("♦ 7, - -".toCards())
-
-        val game = Game(seed, 2)
-
-        assertIterableEquals(expectedHands, game.player)
-        assertEquals(expectedDealer, game.dealer)
-    }
-
-    @Test
-    fun `can recreate game with seed and hand count, more than 2 cards`() {
-        val seed = -2061957228015400700
-        val expectedHands = listOf(Hand("♠ 4, ♠ 10, ♦ 2".toCards()))
-        val expectedDealer = Hand("♦ 6, - -".toCards())
-
-        val game = Game(seed, 3)
-        assertIterableEquals(expectedHands, game.player)
-        assertEquals(expectedDealer, game.dealer)
-    }
-
-
-    @Test
-    fun `split hand`() {
-        val seed = 6937158363516017698
-        val game = Game(seed)
-        assertEquals(1, game.player.size)
-        assertTrue(game.player[0].options.contains(Option.SPLIT))
-        game.player[0].playOption(Option.SPLIT)
-        assertEquals(2, game.player.size)
-
-        val hands = listOf(Hand("♣ 5, ♥ A".toCards()), Hand("♥ 5, ♣ J".toCards()))
-        assertIterableEquals(hands, game.player)
-    }
-}
+})
