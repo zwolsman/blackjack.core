@@ -5,41 +5,49 @@ import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
 import com.zwolsman.blackjack.core.game.Player
 import com.zwolsman.blackjack.core.game.Status
+import sun.plugin.dom.exception.InvalidStateException
 
-class Game(seed: Long = 0) {
-    //Reconstruct game from seed
-//    constructor(seed: Long, vararg handCount: Int) : this(seed) {
-//
-//        if (handCount.size > 1)
-//            TODO("Reconstruct game with multiple hands")
-//
-//        val player = Player()
-//        player.gamePlayOption = ::playOption
-//        for ((index, h) in handCount.withIndex())
-//            for (i in 0 until h - 2) {
-//                player.hands[index].playOption(Option.HIT)
-//            }
-//        players[0] = player
-//    }
+class Game(seed: Long) {
+    constructor(seed: Long, vararg players: Player) : this(seed) {
+        players.forEach(::addPlayer)
+        start()
+    }
 
     val deck = Deck(1, seed)
     val dealer = Hand()
-    val players = mutableListOf(Player())
+    val players = mutableListOf<Player>()
+
+    var isStarted: Boolean = false
+        private set
 
     init {
         players.forEach {
             it.gamePlayOption = ::playOption
         }
         dealer.playOption = ::playDealer
+    }
+
+    fun start() {
+        if (isStarted)
+            throw InvalidStateException("Game is already started")
         fillHands(true)
         checkHands()
+        isStarted = true
+    }
+
+    fun addPlayer(player: Player) {
+        player.gamePlayOption = ::playOption
+        players.add(player)
     }
 
     val isFinished: Boolean
         get() =
-            !dealer.status.canPlay && players.flatMap { it.hands }.none { it.status.canPlay }
+            !dealer.status.canPlay && players.flatMap { it.hands }.none { it.status.canPlay } && isStarted
 
     private fun playOption(player: Player, hand: Hand, option: Option) {
+        if (!isStarted)
+            throw InvalidStateException("Game is not started!")
+
         when (option) {
             Option.HIT -> {
                 hand.addCard(deck.deal())

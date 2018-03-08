@@ -3,6 +3,7 @@ import com.zwolsman.blackjack.core.deck.Deck
 import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
+import com.zwolsman.blackjack.core.game.Player
 import com.zwolsman.blackjack.core.game.Status
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
@@ -12,10 +13,10 @@ import org.junit.jupiter.api.Assertions.*
 
 class GameTest : Spek({
 
-    given("a game") {
+    given("a game with 1 player") {
         val seed1: Long = 0
         context("seed $seed1") {
-            val game = Game(seed1)
+            val game = Game(seed1, Player())
             it("should be finished") {
                 assertTrue(game.isFinished)
             }
@@ -51,7 +52,7 @@ class GameTest : Spek({
 
         val seed2 = 6937158363516017698
         context("seed $seed2") {
-            val game = Game(seed2)
+            val game = Game(seed2, Player())
             it("has the option to split") {
                 assertTrue(Option.SPLIT.isAvailable(game.players[0].hands[0]))
             }
@@ -70,7 +71,7 @@ class GameTest : Spek({
 
         val seed3 = 5631132222
         context("seed $seed3") {
-            val game = Game(seed3)
+            val game = Game(seed3, Player())
             it("adds card to hand") {
                 val nextCard = game.deck.next
 
@@ -83,7 +84,7 @@ class GameTest : Spek({
 
         val seed4 = 98776545890
         context("seed $seed4") {
-            val game = Game(seed4)
+            val game = Game(seed4, Player())
             it("should let the dealer play if user busts") {
                 assertTrue(game.dealer.hasBlank)
                 while (game.players[0].hands[0].status != Status.BUSTED)
