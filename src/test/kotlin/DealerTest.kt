@@ -13,7 +13,7 @@ class DealerTest : Spek({
             with("seed 0") {
                 val game = Game(1)
                 on("player stand") {
-                    game.hands[0].playOption(Option.STAND)
+                    game.players[0].hands[0].playOption(Option.STAND)
                     it("should finish the game and have 20 points") {
                         val expectedCards = "♥ 2, ♥ 8, ♥ 4, ♥ 5".toCards()
                         val expectedPoints = 19
@@ -30,7 +30,7 @@ class DealerTest : Spek({
         given("a game with seed $seed") {
             val game = Game(seed)
             on("player stand") {
-                game.hands[0].playOption(Option.STAND)
+                game.players[0].hands[0].playOption(Option.STAND)
                 it("should finish the game") {
                     assertTrue(game.isFinished)
                 }

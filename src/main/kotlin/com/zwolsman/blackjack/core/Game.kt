@@ -3,38 +3,43 @@ package com.zwolsman.blackjack.core
 import com.zwolsman.blackjack.core.deck.Deck
 import com.zwolsman.blackjack.core.game.Hand
 import com.zwolsman.blackjack.core.game.Option
+import com.zwolsman.blackjack.core.game.Player
 import com.zwolsman.blackjack.core.game.Status
 
 class Game(seed: Long = 0) {
     //Reconstruct game from seed
-    constructor(seed: Long, vararg handCount: Int) : this(seed) {
-
-        if (handCount.size > 1)
-            TODO("Reconstruct game with multiple hands")
-
-
-        for ((index, h) in handCount.withIndex())
-            for (i in 0 until h - 2) {
-                hands[index].playOption(Option.HIT)
-            }
-    }
+//    constructor(seed: Long, vararg handCount: Int) : this(seed) {
+//
+//        if (handCount.size > 1)
+//            TODO("Reconstruct game with multiple hands")
+//
+//        val player = Player()
+//        player.gamePlayOption = ::playOption
+//        for ((index, h) in handCount.withIndex())
+//            for (i in 0 until h - 2) {
+//                player.hands[index].playOption(Option.HIT)
+//            }
+//        players[0] = player
+//    }
 
     val deck = Deck(1, seed)
     val dealer = Hand()
-    val hands = mutableListOf(Hand())
+    val players = mutableListOf(Player())
 
     init {
-        hands.forEach { it.playOption = ::playOption }
-        dealer.playOption = ::playOption
+        players.forEach {
+            it.gamePlayOption = ::playOption
+        }
+        dealer.playOption = ::playDealer
         fillHands(true)
         checkHands()
     }
 
     val isFinished: Boolean
         get() =
-            !dealer.status.canPlay && hands.none { it.status.canPlay }
+            !dealer.status.canPlay && players.flatMap { it.hands }.none { it.status.canPlay }
 
-    private fun playOption(hand: Hand, option: Option) {
+    private fun playOption(player: Player, hand: Hand, option: Option) {
         when (option) {
             Option.HIT -> {
                 hand.addCard(deck.deal())
@@ -44,9 +49,7 @@ class Game(seed: Long = 0) {
             }
             Option.SPLIT -> {
                 val card = hand.cards.removeAt(1)
-                val newHand = Hand(card)
-                newHand.playOption = ::playOption
-                hands.add(newHand)
+                player.addHand(Hand(card))
                 fillHands()
             }
             Option.DOUBLE -> TODO()
@@ -56,15 +59,17 @@ class Game(seed: Long = 0) {
     }
 
     private fun checkHands() {
-        if (hands.none { it.status.canPlay })
+        if (players.flatMap { it.hands }.none { it.status.canPlay })
             playDealer()
     }
 
     private fun fillHands(setup: Boolean = false) {
-        while (dealer.cards.size < 2 || hands.any { it.cards.size < 2 }) {
-            for (hand in hands) {
-                if (hand.cards.size < 2)
-                    hand.addCard(deck.deal())
+        while (dealer.cards.size < 2 || players.flatMap { it.hands }.any { it.cards.size < 2 }) {
+            for (player in players) {
+                for (hand in player.hands) {
+                    if (hand.cards.size < 2)
+                        hand.addCard(deck.deal())
+                }
             }
             if (!setup || dealer.cards.size >= 2)
                 continue
@@ -72,6 +77,16 @@ class Game(seed: Long = 0) {
             val dealBlank = dealer.cards.size == 1
             dealer.addCard(deck.deal(dealBlank))
         }
+    }
+
+    private fun playDealer(hand: Hand, option: Option) {
+        when (option) {
+            Option.HIT -> {
+                hand.addCard(deck.deal())
+            }
+            else -> throw NotImplementedError("Option $option is not implemented for the dealer")
+        }
+        checkHands()
     }
 
     private fun playDealer(stopsAtSoft17: Boolean = true) {
@@ -83,7 +98,7 @@ class Game(seed: Long = 0) {
             }
 
             if (dealer.hasBlank) {
-                dealer.cards[1] = deck[3]
+                dealer.cards[1] = deck[players.size + 2]
                 continue
             }
 
