@@ -1,6 +1,5 @@
 package com.zwolsman.blackjack.core.game
 
-import com.zwolsman.blackjack.core.deck.card.Card
 import com.zwolsman.blackjack.core.deck.card.Rank
 
 enum class Option {

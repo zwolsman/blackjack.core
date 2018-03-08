@@ -10,18 +10,19 @@ class Deck(decks: Int, val seed: Long = 0) : Iterable<Card> {
     private val shuffler: IShuffler = BasicShuffler(seed)
 
     companion object {
-        val FULL_DECK =
-                Suit.values().flatMap { suit ->
-                    Rank.values().mapNotNull { rank ->
-                        if(suit == Suit.NONE || rank == Rank.NONE)
-                            return@mapNotNull null
-                        Card(suit, rank)
-                    }
-                }.toTypedArray()
-        }
+        val FULL_DECK = {
+            val suits = Suit.values().filter { it != Suit.NONE }
+            val ranks = Rank.values().filter { it != Rank.NONE }
+            suits.flatMap { suit ->
+                ranks.map { rank ->
+                    Card(suit, rank)
+                }
+            }
+        }()
+    }
 
 
-    var cards:ArrayList<Card>
+    var cards: ArrayList<Card>
         private set
 
     init {
